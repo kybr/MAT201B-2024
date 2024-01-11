@@ -17,6 +17,14 @@ struct MyApp : public al::App {
 
         nav().pos(0, 0, 4);
     }
+    void onAnimate(double dt) {
+        static double phase = 0;
+        phase += dt;
+        if (phase >= 1) {
+            phase -= 1;
+            nav().faceToward(al::rnd::ball<al::Vec3d>());
+        }
+    }
     void onDraw(al::Graphics& g) {
         g.clear(1);
         g.meshColor();
