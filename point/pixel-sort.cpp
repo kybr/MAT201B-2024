@@ -16,7 +16,7 @@ using namespace std;
 string slurp(string fileName);  // forward declaration
 
 struct AlloApp : App {
-  Parameter pointSize{"/pointSize", "", 1.0, 0.0, 2.0};
+  Parameter pointSize{"/pointSize", "", 1.0, 0.1, 3.0};
   Parameter timeStep{"/timeStep", "", 0.1, 0.01, 0.6};
   //
 
@@ -47,6 +47,10 @@ struct AlloApp : App {
 
     auto file = File::currentPath() + "../colorful.png";
     auto image = Image(file);
+    if (image.width() == 0) {
+      cout << "did not load image" << endl;
+      exit(1);
+    }
     auto aspect_ratio = 1.0f * image.width() / image.height();
     for (int j = 0; j < image.height(); j++) {
       for (int i = 0; i < image.width(); i++) {
