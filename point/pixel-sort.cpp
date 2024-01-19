@@ -13,9 +13,6 @@ using namespace al;
 #include <vector>
 using namespace std;
 
-Vec3f randomVec3f(float scale) {
-  return Vec3f(rnd::uniformS(), rnd::uniformS(), rnd::uniformS()) * scale;
-}
 string slurp(string fileName);  // forward declaration
 
 struct AlloApp : App {
@@ -24,12 +21,6 @@ struct AlloApp : App {
   //
 
   ShaderProgram pointShader;
-
-  //  simulation state
-  Mesh mesh;  // position *is inside the mesh* mesh.vertices() are the positions
-  vector<Vec3f> velocity;
-  vector<Vec3f> acceleration;
-  vector<float> mass;
 
   void onInit() override {
     // set up GUI
@@ -40,14 +31,19 @@ struct AlloApp : App {
     //
   }
 
-Mesh current;
+  // a mesh for every style
+  Mesh current;
+  Mesh original;
+  Mesh rgb;
+  Mesh hsv;
+  Mesh your_style;
 
   void onCreate() override {
     pointShader.compile(slurp("../point-vertex.glsl"),
                         slurp("../point-fragment.glsl"),
                         slurp("../point-geometry.glsl"));
 
-    mesh.primitive(Mesh::POINTS);
+    current.primitive(Mesh::POINTS);
 
     auto file = File::currentPath() + "../colorful.png";
     auto image = Image(file);
@@ -55,9 +51,15 @@ Mesh current;
     for (int j = 0; j < image.height(); j++) {
       for (int i = 0; i < image.width(); i++) {
         auto pixel = image.at(i, j); // 0-255 (unsigned char / uint8)
-        mesh.vertex(1.0 * i / image.width() * aspect_ratio, 1.0 * j / image.height(), 0);
-        mesh.color(pixel.r / 255.0, pixel.g / 255.0, pixel.b / 255.0);
-        mesh.texCoord(0.05, 0);  // s, t
+        current.vertex(1.0 * i / image.width() * aspect_ratio, 1.0 * j / image.height(), 0);
+        current.color(pixel.r / 255.0, pixel.g / 255.0, pixel.b / 255.0);
+        current.texCoord(0.05, 0);  // s, t
+
+        original.vertex(1.0 * i / image.width() * aspect_ratio, 1.0 * j / image.height(), 0);
+        original.color(pixel.r / 255.0, pixel.g / 255.0, pixel.b / 255.0);
+        original.texCoord(0.05, 0);  // s, t
+      
+        // XXX add your RGB and HSV mesh construction here.
       }
     }
 
@@ -65,22 +67,27 @@ Mesh current;
   }
 
   void onAnimate(double dt) override {
+    //
+    // XXX accumulate dt to animate transitions between meshes
   }
 
   bool onKeyDown(const Keyboard &k) override {
     if (k.key() == '1') {
+      // XXX trigger a transition from the current state to the RGB state
     }
+    // XXX add more key-based triggers here
     return true;
   }
 
   void onDraw(Graphics &g) override {
+    // XXX no need to change anything in this function
     g.clear(0.3);
     g.shader(pointShader);
     g.shader().uniform("pointSize", pointSize / 100);
     g.blending(true);
     g.blendTrans();
     g.depthTesting(true);
-    g.draw(mesh);
+    g.draw(current);
   }
 };
 
