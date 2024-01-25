@@ -19,6 +19,7 @@ string slurp(string fileName);  // forward declaration
 struct AlloApp : App {
   Parameter pointSize{"/pointSize", "", 1.0, 0.0, 2.0};
   Parameter timeStep{"/timeStep", "", 0.1, 0.01, 0.6};
+  Parameter dragFactor{"/dragFactor", "", 0.1, 0.0, 0.9};
   //
 
   ShaderProgram pointShader;
@@ -26,7 +27,7 @@ struct AlloApp : App {
   //  simulation state
   Mesh mesh;  // position *is inside the mesh* mesh.vertices() are the positions
   vector<Vec3f> velocity;
-  vector<Vec3f> acceleration;
+  vector<Vec3f> force;
   vector<float> mass;
 
   void onInit() override {
@@ -35,6 +36,7 @@ struct AlloApp : App {
     auto &gui = GUIdomain->newGUI();
     gui.add(pointSize);  // add parameter to GUI
     gui.add(timeStep);   // add parameter to GUI
+    gui.add(dragFactor);   // add parameter to GUI
     //
   }
 
@@ -67,7 +69,7 @@ struct AlloApp : App {
 
       // separate state arrays
       velocity.push_back(randomVec3f(0.1));
-      acceleration.push_back(randomVec3f(1));
+      force.push_back(randomVec3f(1));
     }
 
     nav().pos(0, 0, 10);
@@ -76,9 +78,6 @@ struct AlloApp : App {
   bool freeze = false;
   void onAnimate(double dt) override {
     if (freeze) return;
-
-    // ignore the real dt and set the time step;
-    dt = timeStep;
 
     // Calculate forces
 
@@ -93,14 +92,16 @@ struct AlloApp : App {
     // • -=
     // • +
     // • -
-    // • .normalize() ~ Vec3f points in the direction as it did, but has length
-    // 1 • .normalize(float scale) ~ same but length `scale` • .mag() ~ length
-    // of the Vec3f • .magSqr() ~ squared length of the Vec3f • .dot(Vec3f f) •
-    // .cross(Vec3f f)
+    // • .normalize() ~ Vec3f points in the direction as it did, but has length 1
+    // • .normalize(float scale) ~ same but length `scale`
+    // • .mag() ~ length of the Vec3f
+    // • .magSqr() ~ squared length of the Vec3f
+    // • .dot(Vec3f f) 
+    // • .cross(Vec3f f)
 
     // drag
     for (int i = 0; i < velocity.size(); i++) {
-      acceleration[i] -= velocity[i] * 0.1;
+      force[i] += - velocity[i] * dragFactor;
     }
 
     // Integration
@@ -108,16 +109,12 @@ struct AlloApp : App {
     vector<Vec3f> &position(mesh.vertices());
     for (int i = 0; i < velocity.size(); i++) {
       // "semi-implicit" Euler integration
-      velocity[i] += acceleration[i] / mass[i] * dt;
-      position[i] += velocity[i] * dt;
-
-      // Explicit (or "forward") Euler integration would look like this:
-      // position[i] += velocity[i] * dt;
-      // velocity[i] += acceleration[i] / mass[i] * dt;
+      velocity[i] += force[i] / mass[i] * timeStep;
+      position[i] += velocity[i] * timeStep;
     }
 
     // clear all accelerations (IMPORTANT!!)
-    for (auto &a : acceleration) a.set(0);
+    for (auto &a : force) a.set(0);
   }
 
   bool onKeyDown(const Keyboard &k) override {
@@ -129,7 +126,7 @@ struct AlloApp : App {
       // introduce some "random" forces
       for (int i = 0; i < velocity.size(); i++) {
         // F = ma
-        acceleration[i] = randomVec3f(1) / mass[i];
+        force[i] += randomVec3f(1);
       }
     }
 
