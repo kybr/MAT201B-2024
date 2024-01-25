@@ -17,7 +17,7 @@ int main() {
   HSV b(1, 1, 1);
   Lab c(1, 1, 1);
 
-  HSV hsv = a;
+  HSV hsv = a; // make HSV out of RGB (color conversion)
   cout << hsv.h << endl;
   cout << hsv.s << endl;
   cout << hsv.v << endl;
