@@ -2,21 +2,30 @@
 // 2022-02-22  | Audio-reactive visualizer
 //
 
-#include "Gamma/SamplePlayer.h"  // XXX
 #include "al/app/al_App.hpp"
 #include "al/app/al_GUIDomain.hpp"
 #include "al/graphics/al_Shapes.hpp"
 #include "al/math/al_Functions.hpp"  // al::abs
 
+#include "Gamma/SamplePlayer.h"  // XXX
+#include "Gamma/Analysis.h"
+#include "Gamma/Effects.h"
+
 using namespace al;
 
 struct MyApp : App {
   Parameter value{"value", 0, 0, 1};
+
   gam::SamplePlayer<float, gam::ipl::Linear, gam::phsInc::Loop> player;
+  gam::EnvFollow<> follow;
 
   Mesh sphere;
 
-  void onCreate() override { addSphere(sphere); }
+  void onCreate() override { addSphere(sphere); 
+  
+    follow.lag(0.5); 
+  
+  }
 
   void onDraw(Graphics& g) override {
     g.clear(0.2);
@@ -46,12 +55,7 @@ struct MyApp : App {
       float s = player();
       io.out(0) = io.out(1) = s;
 
-      float f = s;
-      f = (f < 0) ? -f : f;  // absolute value
-      //f = abs(f);
-      f = 1 - pow4(f - 1);   // non-linear transformation
-      // https://www.desmos.com/calculator/qumteupggk
-      value.set(f);
+      value.set(follow(s));
 
       // qualities of sound?
       //
