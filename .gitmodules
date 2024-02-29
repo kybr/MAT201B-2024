@@ -1,0 +1,12 @@
+[submodule "MAT201B-2024-marcel-riccelli"]
+	path = MAT201B-2024-marcel-riccelli
+	url = https://github.com/marcelrodriguezricc/MAT201B-2024-marcel-riccelli
+[submodule "MAT201B-2024-elijah-frankle"]
+	path = MAT201B-2024-elijah-frankle
+	url = https://github.com/EKF626/MAT201B-2024-elijah-frankle
+[submodule "MAT201B-2024-joel-jaffe"]
+	path = MAT201B-2024-joel-jaffe
+	url = https://github.com/joeljaffesd/MAT201B-2024-joel-jaffe
+[submodule "MAT201B-2024-Jazer"]
+	path = MAT201B-2024-Jazer
+	url = https://github.com/JazerUCSB/MAT201B-2024-Jazer
