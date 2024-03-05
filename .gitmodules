@@ -10,3 +10,6 @@
 [submodule "MAT201B-2024-Jazer"]
 	path = MAT201B-2024-Jazer
 	url = https://github.com/JazerUCSB/MAT201B-2024-Jazer
+[submodule "MAT201B-2024_Yuehao_Gao"]
+	path = MAT201B-2024_Yuehao_Gao
+	url = https://github.com/yuehaogao/MAT201B-2024_Yuehao_Gao
