@@ -16,3 +16,9 @@
 [submodule "MAT201B-2024-noah-thompson"]
 	path = MAT201B-2024-noah-thompson
 	url = https://github.com/nothompson/MAT201B-2024-noah-thompson
+[submodule "MAT201B-2024-erik-mondrian"]
+	path = MAT201B-2024-erik-mondrian
+	url = https://github.com/erikmondrian/MAT201B-2024-erik-mondrian.git
+[submodule "MAT201B-2024-ryan-millett"]
+	path = MAT201B-2024-ryan-millett
+	url = https://github.com/kr4g/MAT201B-2024-ryan-millett.git
