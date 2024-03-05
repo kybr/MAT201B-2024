@@ -13,3 +13,6 @@
 [submodule "MAT201B-2024_Yuehao_Gao"]
 	path = MAT201B-2024_Yuehao_Gao
 	url = https://github.com/yuehaogao/MAT201B-2024_Yuehao_Gao
+[submodule "MAT201B-2024-noah-thompson"]
+	path = MAT201B-2024-noah-thompson
+	url = https://github.com/nothompson/MAT201B-2024-noah-thompson
